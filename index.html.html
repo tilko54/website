@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>-ČKE | Blueberry Land</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap');
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: linear-gradient(120deg, #a18cd1, #fbc2eb, #f9f586);
+  background-size: 400% 400%;
+  animation: gradientBG 30s ease infinite;
+  opacity: 0;
+  animation: fadeIn 2s ease forwards;
+}
+
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem; /* bigger title */
+  color: #4b3d8f;
+  text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
+  text-align: center;
+  z-index: 2;
+  font-family: 'Baloo 2', cursive;
+}
+
+.subtitle {
+  font-size: 1.5rem; /* bigger subtitle */
+  color: #4b3d8f;
+  margin-top: 10px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.blueberry {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #4b3d8f, #20123d);
+  border: 2px solid #120a26;
+  box-shadow: 0 0 15px rgba(0,114,255,0.8);
+  transition: transform 0.3s;
+  z-index: 1;
+  animation: spin 6s linear infinite; /* add subtle spin */
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.blueberry::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 18%;
+  width: 20%;
+  height: 20%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.8);
+}
+
+.blueberry::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 10px;
+  background: #000;
+  border-radius: 2px;
+}
+
+.sparkle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: gold;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: sparkleAnim 0.6s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes sparkleAnim {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+</style>
+</head>
+<body>
+<div class="center-text">
+  -ČKE
+  <div class="subtitle">klikni na borovničko za borovni-čke</div>
+</div>
+
+<script>
+const count = 35;
+const blueberries = [];
+const w = window.innerWidth;
+const h = window.innerHeight;
+
+let mouseX = w/2, mouseY = h/2;
+let mouseMoved = false;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  mouseMoved = true;
+});
+
+// create blueberries
+for (let i = 0; i < count; i++) {
+  const size = 30 + Math.random()*30;
+  const el = document.createElement('div');
+  el.className = 'blueberry';
+  el.style.width = size + 'px';
+  el.style.height = size + 'px';
+  el.style.left = Math.random()*(w - size) + 'px';
+  el.style.top = Math.random()*(h - size) + 'px';
+
+  const berry = {
+    el,
+    x: parseFloat(el.style.left),
+    y: parseFloat(el.style.top),
+    size,
+    vx: (Math.random()-0.5)*6,
+    vy: (Math.random()-0.5)*6,
+    stopped: false
+  };
+
+  el.addEventListener('mouseenter', () => {
+    berry.stopped = true;
+    el.style.transform += ' scale(1.5)'; // keep spin and enlarge
+  });
+  el.addEventListener('mouseleave', () => {
+    berry.stopped = false;
+    el.style.transform = el.style.transform.replace(' scale(1.5)','');
+  });
+
+  el.addEventListener('click', (e) => {
+    createSparkle(e.clientX, e.clientY);
+    setTimeout(()=>{ window.location.href='next.html'; }, 300);
+  });
+
+  blueberries.push(berry);
+  document.body.appendChild(el);
+}
+
+// sparkle effect
+function createSparkle(x,y){
+  const sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.left = (x-5)+'px';
+  sparkle.style.top = (y-5)+'px';
+  document.body.appendChild(sparkle);
+  setTimeout(()=>{ sparkle.remove(); },600);
+}
+
+// animate movement
+function animate(){
+  let closestBerry = null;
+  let minDist = Infinity;
+
+  if (mouseMoved) {
+    for (const b of blueberries) {
+      const dx = mouseX - (b.x+b.size/2);
+      const dy = mouseY - (b.y+b.size/2);
+      const dist = Math.hypot(dx,dy);
+      if(dist < minDist){
+        minDist = dist;
+        closestBerry = b;
+      }
+    }
+  }
+
+  for (let i=0; i<blueberries.length; i++){
+    const b = blueberries[i];
+
+    if (!b.stopped){
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (mouseMoved && b === closestBerry) {
+        const dx = mouseX - (b.x+b.size/2);
+        const dy = mouseY - (b.y+b.size/2);
+        const dist = Math.hypot(dx,dy);
+        if(dist>1){
+          b.vx += dx/dist * 0.2;
+          b.vy += dy/dist * 0.2;
+        }
+      }
+
+      b.vx *= 0.99;
+      b.vy *= 0.99;
+
+      if (b.x <= 0 || b.x + b.size >= w) b.vx *= -1;
+      if (b.y <= 0 || b.y + b.size >= h) b.vy *= -1;
+
+      for (let j=i+1; j<blueberries.length; j++){
+        const other = blueberries[j];
+        const dx2 = (b.x+b.size/2)-(other.x+other.size/2);
+        const dy2 = (b.y+b.size/2)-(other.y+other.size/2);
+        const dist2 = Math.hypot(dx2,dy2);
+        if (dist2 < (b.size+other.size)/2){
+          const angle = Math.atan2(dy2,dx2);
+          b.vx += Math.cos(angle);
+          b.vy += Math.sin(angle);
+          other.vx -= Math.cos(angle);
+          other.vy -= Math.sin(angle);
+        }
+      }
+
+      b.el.style.left = b.x + 'px';
+      b.el.style.top = b.y + 'px';
+    }
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

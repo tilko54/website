@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueberry Dream T-Shirt</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Comic Neue', cursive;
+  background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+img {
+  width: 200px;
+  height: auto;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 10px;
+}
+
+p {
+  color: #444;
+  max-width: 500px;
+  text-align: center;
+  margin: 10px;
+  font-size: 1.1rem;
+}
+
+.price {
+  color: red;
+  font-size: 2rem;
+  text-shadow: 0 0 5px orange, 0 0 10px gold;
+}
+
+.buy-sign {
+  font-size: 2.5rem;
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+  text-shadow: 0 0 5px orange, 0 0 10px gold;
+  transition: transform 0.3s;
+  display: inline-block;
+}
+
+.buy-sign:hover {
+  transform: scale(1.5) rotate(-5deg);
+  animation: sparkle 0.5s ease-out;
+}
+
+@keyframes sparkle {
+  0% { text-shadow: 0 0 5px yellow, 0 0 10px gold; }
+  100% { text-shadow: 0 0 5px orange, 0 0 10px gold; }
+}
+
+button {
+  margin-top: 20px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #333;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #f1f1f1;
+}
+</style>
+</head>
+<body>
+  <img src="tshrt.png" alt="Product">
+  <h1>Blueberry Dream T‑Shirt</h1>
+  <p>Soft cotton t‑shirt from the limited Blueberry Dream collection. Inspired by fresh morning berries and magic.</p>
+  <div>
+    <span class="price">€29.99</span>
+    <span class="buy-sign">KUPI !</span>
+  </div>
+  <button onclick="history.back()">← Back</button>
+</body>
+</html>
